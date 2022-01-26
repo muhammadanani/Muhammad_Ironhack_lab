@@ -12,15 +12,18 @@ SELECT sr.customer_id, sc.first_name, sc.last_name, count(sr.customer_id) as act
 JOIN sakila.customer as sc
 ON sr.customer_id = sc.customer_id
 GROUP BY sr.customer_id
-ORDER BY sr.customer_id DESC
+ORDER BY activity DESC
 LIMIT 1;
 
 
 -- 3. List number of films per category.
+SELECT * FROM sakila.category;
 
-SELECT category_id, count(film_id) count FROM sakila.film_category
-GROUP BY category_id
-ORDER BY category_id;
+SELECT fcat.category_id, cat.name, count(fcat.film_id) as count FROM sakila.film_category as fcat
+INNER JOIN sakila.category as cat
+ON fcat.category_id = cat.category_id -- check
+GROUP BY cat.name
+ORDER BY count DESC;
 
 -- 4. Display the first and last names, as well as the address, of each staff member.
 
@@ -33,6 +36,7 @@ ON staff.address_id = address.address_id;
 SELECT py.staff_id,  stf.first_name, stf.last_name, sum(py.amount) as total_rung FROM sakila.payment as py
 JOIN sakila.staff as stf
 ON py.staff_id = stf.staff_id
+WHERE payment_date like '2005_08%' -- double check
 GROUP BY py.staff_id;
 
 -- 6. List each film and the number of actors who are listed for that film.

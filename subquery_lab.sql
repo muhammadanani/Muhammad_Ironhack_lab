@@ -4,7 +4,7 @@ USE sakila;
 -- 1. How many copies of the film Hunchback Impossible exist in the inventory system?
 
 SELECT * FROM 
-(SELECT inv.film_id,  f.title as title, count(inv.inventory_id)as stock FROM inventory as inv
+(SELECT inv.film_id,  f.title as title, count(inv.inventory_id) as stock FROM inventory as inv
 JOIN film as f
 ON inv.film_id = f.film_id
 GROUP BY inv.film_id) as stocklist        -- creates a subquery 'stocklist' with a complete inventory list
@@ -25,11 +25,11 @@ SELECT first_name, last_name FROM actor 				 -- finds actor name based on id
 -- 4. Sales have been lagging among young families, and you wish to target all family movies for a promotion.
 --  	Identify all movies categorized as family films.
 
-SELECT title as family_film_list FROM film 					  -- step 3: find corresponding names to film ids
+SELECT title as family_film_list FROM film 					  -- sub 3: find corresponding names to film ids
 	WHERE film_id IN 
-		(SELECT film_id FROM film_category 					  -- step 2: finds which film id corresponds to cat 
+		(SELECT film_id FROM film_category 					  -- sub 2: finds which film id corresponds to cat 
 			WHERE category_id = 
-(SELECT category_id FROM category WHERE name IN ('family'))); -- step 1: finds which cat corresponds to family
+(SELECT category_id FROM category WHERE name IN ('family'))); -- sub 1: finds which cat id corresponds to family
 
 -- 5. Get name and email from customers from Canada using subqueries. Do the same with joins. 
 -- 		Note that to create a join, you will have to identify the correct tables with their primary keys and foreign keys,
@@ -58,9 +58,9 @@ WHERE country = 'CANADA';
 -- 	 find the different films that he/she starred.
 
 SELECT title as films_prolific FROM film WHERE film_id IN -- finds titles based on film id found in subquery
-(SELECT film_id FROM film_actor 
+(SELECT film_id FROM film_actor               -- sub 2
 WHERE actor_id =							  -- uses prolific actor id from subquery to find filmid 
-(SELECT actor_id FROM film_actor 		      
+(SELECT actor_id FROM film_actor 		      -- sub 1
 GROUP BY actor_id                             -- finds actor_id with most appearances
 ORDER BY  count(film_id) DESC LIMIT 1));      
 
